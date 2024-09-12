@@ -96,7 +96,7 @@ def plot_contour(variation_ratio, n, f, f_hat=None, plt_name="Org"):
 
     plt.xlim(-1.75, 1.75)
     plt.ylim(-1.75, 1.75)
-    contour = plt.contour(X, Y, Z, linewidth=5, cmap=plt.cm.coolwarm)
+    contour = plt.contour(X, Y, Z, cmap=plt.cm.coolwarm)
     min_z_idx = Z[(Y >= 0.5) & (Y - 4 * X >= 1)].argmin()
     plt.plot(
         X[(Y >= 0.5) & (Y - 4 * X >= 1)][min_z_idx],
@@ -115,7 +115,7 @@ def plot_contour(variation_ratio, n, f, f_hat=None, plt_name="Org"):
         + str(round(Y[(Y >= 0.5) & (Y - 4 * X >= 1)][min_z_idx], 4))
         + ")",
     )
-    plt.axline(xy1=(0, 1), slope=4, color="r", lw=1)
-    plt.hlines(y=0.5, xmin=-1.75, xmax=1.75, color="r", lw=1)
+    plt.axline(xy1=(0, 1), slope=4, color="black", lw=1, linestyle='--')
+    plt.hlines(y=0.5, xmin=-1.75, xmax=1.75, color="black", lw=1, linestyle='--')
     plt.clabel(contour, inline=1, fontsize=8)
     plt.show()
