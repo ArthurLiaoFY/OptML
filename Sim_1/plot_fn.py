@@ -18,7 +18,7 @@ def plot_obj_surface(variation_ratio, n, f, f_hat=None, plt_name="Org"):
     ax.set_aspect("auto")
     # surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
     #                     cmap=cm.jet, edgecolor=None, linewidth=0.5, antialiased=False)
-    if plt_name == "lm":
+    if plt_name == "svm":
         surf = ax.plot_surface(
             X,
             Y,
@@ -79,7 +79,7 @@ def plot_contour(variation_ratio, n, f, f_hat=None, plt_name="Org"):
     plt.xlabel("x")
     plt.ylabel("y")
     X, Y = np.meshgrid(np.arange(-1.75, 1.75, delta), np.arange(-1.75, 1.75, delta))
-    if plt_name == "lm":
+    if plt_name == "svm":
         Z = f_hat.predict(np.array([X.reshape(-1), Y.reshape(-1)]).T).reshape(
             grid_len, grid_len
         )
