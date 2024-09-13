@@ -9,20 +9,14 @@ from sko.PSO import PSO
 # %%
 def optimize_f_hat(
     obj_func,
+    constraint_ueq: list,
     max_iter: int,
     size_pop: int,
     x_min: list,
     x_max: list,
     opt_type: str = "DE",
 ):
-    """
-    min f(x1, x2) = f(x1, x2)
-    s.t.
-        x2 >= 0.5  => 0.5-x2 <= 0
-        x2 - 4*x1 >= 1  => 1-x2+4*x1 <= 0
-        -1.75 <= x1, x2 <= 1.75
-    """
-    constraint_ueq = [lambda x: 0.5 - x[1], lambda x: 1 - x[1] + 4 * x[0]]
+
 
     def func(x: np.ndarray):
         return float(obj_func(np.array([x])).item())
