@@ -16,13 +16,14 @@ class SimulateData:
         match func:
             case "f1":
                 self.func = self.__f1
+                self.x_min = [-1.75, -1.75]
+                self.x_max = [1.75, 1.75]
             case "f2":
                 self.func = self.__f2
+                self.x_min = [-3.0, -3.0]
+                self.x_max = [3.0, 3.0]
             case _:
                 raise NotImplementedError
-
-        self.x_min = [-3.0, -3.0]
-        self.x_max = [3.0, 3.0]
 
     def __f1(self, x1, x2):
         return (-np.cos(np.pi * (x1)) * np.cos(2 * np.pi * (x2))) / (
@@ -30,7 +31,7 @@ class SimulateData:
         )
 
     def __f2(self, x1, x2):
-        return -np.cos((x1 - 0.2) * x2) ** 2 + x1 * np.sin(2 * x1 + x2)
+        return -1 * np.power(np.cos((x1 - 0.2) * x2), 2) + x1 * np.sin(2 * x1 + x2)
 
     def get_data(self, train_size_ratio: float = 0.8):
         seed = np.random.RandomState(self.seed)
