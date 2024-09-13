@@ -8,12 +8,12 @@ class SimulateData:
         seed: int = 1122,
         simulate_size: int = 3000,
         variation_ratio: float = 0.01,
-        func: str = "f1",
+        sim_func: str = "f1",
     ) -> None:
         self.seed = seed
         self.simulate_size = simulate_size
         self.variation_ratio = variation_ratio
-        match func:
+        match sim_func:
             case "f1":
                 self.func = self.__f1
                 self.x_min = [-1.75, -1.75]

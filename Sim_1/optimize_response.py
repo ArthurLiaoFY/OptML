@@ -65,6 +65,7 @@ def optimize_f_hat(
                 ub=x_max,
                 constraint_ueq=constraint_ueq,
             )
+            opt.record_mode = True
             opt.run()
             return opt, opt.gbest_x, opt.gbest_y.item()
 
