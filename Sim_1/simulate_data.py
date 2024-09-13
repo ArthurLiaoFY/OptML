@@ -18,10 +18,28 @@ class SimulateData:
                 self.func = self.__f1
                 self.x_min = [-1.75, -1.75]
                 self.x_max = [1.75, 1.75]
+                self.constraint_ueq = [
+                    lambda x: 0.5 - x[1],
+                    lambda x: 1 - x[1] + 4 * x[0],
+                ]
+
             case "f2":
                 self.func = self.__f2
                 self.x_min = [-3.0, -3.0]
                 self.x_max = [3.0, 3.0]
+                self.constraint_ueq = [
+                    lambda x: 0.5 - x[1],
+                    lambda x: 1 - x[1] + 4 * x[0],
+                ]
+
+            case "f3":
+                self.func = self.__f3
+                self.x_min = [-2.0, -2.0]
+                self.x_max = [2.0, 2.0]
+                self.constraint_ueq = [
+                    lambda x: (x[0] - 1) ** 2 + (x[1] - 0) ** 2 - 0.5**2,
+                ]
+
             case _:
                 raise NotImplementedError
 
@@ -32,6 +50,13 @@ class SimulateData:
 
     def __f2(self, x1, x2):
         return -1 * np.power(np.cos((x1 - 0.2) * x2), 2) + x1 * np.sin(2 * x1 + x2)
+
+    def __f3(self, x1, x2):
+        return (
+            -20 * np.exp(-0.2 * np.sqrt(0.5 * (x1**2 + x2**2)))
+            - np.exp(0.5 * (np.cos(2 * np.pi * x1) + np.cos(2 * np.pi * x2)))
+            + 20
+        )
 
     def get_data(self, train_size_ratio: float = 0.8):
         seed = np.random.RandomState(self.seed)
