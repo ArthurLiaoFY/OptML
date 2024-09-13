@@ -1,121 +1,73 @@
-import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
-from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.animation import FuncAnimation
 
 
-def plot_obj_surface(variation_ratio, n, f, f_hat=None, plt_name="Org"):
-    delta = 0.01
-    grid_len = len(np.arange(-1.75, 1.75, delta))
-    X, Y = np.meshgrid(np.arange(-1.75, 1.75, delta), np.arange(-1.75, 1.75, delta))
+def plot_obj_surface(
+    x_max: list, x_min: list, f, f_hat=None, delta: float = 0.01, animate: bool = False
+):
+    x1_grid = np.arange(x_min[0], x_max[0], delta)
+    x2_grid = np.arange(x_min[1], x_max[1], delta)
+    X, Y = np.meshgrid(
+        x1_grid,
+        x2_grid,
+    )
     Z = f(X, Y)
-    fig = plt.figure()
-    # ax = fig.add_axes(Axes3D(fig))
-    ax = plt.axes(projection="3d")
+    Z_hat = f_hat.predict(np.array([X.reshape(-1), Y.reshape(-1)]).T).reshape(
+        len(x1_grid), len(x2_grid)
+    )
 
-    ax.view_init(elev=20.0, azim=-45)
-    ax.set_aspect("auto")
-    # surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
-    #                     cmap=cm.jet, edgecolor=None, linewidth=0.5, antialiased=False)
-    if plt_name == "svm":
-        surf = ax.plot_surface(
-            X,
-            Y,
-            f_hat.predict(np.array([X.reshape(-1), Y.reshape(-1)]).T).reshape(
-                grid_len, grid_len
-            ),
-            cmap=plt.cm.coolwarm,
-        )
-    elif plt_name == "lgb":
-        surf = ax.plot_surface(
-            X,
-            Y,
-            f_hat.predict(np.array([X.reshape(-1), Y.reshape(-1)]).T).reshape(
-                grid_len, grid_len
-            ),
-            cmap=plt.cm.coolwarm,
-        )
-    elif plt_name == "xgb":
-        surf = ax.plot_surface(
-            X,
-            Y,
-            f_hat.predict(np.array([X.reshape(-1), Y.reshape(-1)]).T).reshape(
-                grid_len, grid_len
-            ),
-            cmap=plt.cm.coolwarm,
-        )
-    else:
-        surf = ax.plot_surface(X, Y, Z, cmap=plt.cm.coolwarm)
-    fig.colorbar(surf, shrink=0.5, aspect=10)
+    fig = plt.figure(figsize=(15, 5))
+    ax0 = fig.add_subplot(1, 3, 1, projection="3d")
+    ax1 = fig.add_subplot(1, 3, 2)
+    ax2 = fig.add_subplot(1, 3, 3, projection="3d")
 
-    plt.xticks(np.arange(-1.75, 1.75, 0.74))
-    plt.yticks(np.arange(-1.75, 1.75, 0.74))
-    plt.xlabel(r"x")
-    plt.ylabel(r"y")
-    plt.title(
-        "{f}(x,y)  (n:{n}, variation ratio:{variation_ratio})".format(
-            n=n, variation_ratio=variation_ratio, f=plt_name
-        ),
+    ax0.set_aspect("auto")
+    ax0.plot_surface(
+        X,
+        Y,
+        Z_hat,
+        cmap=plt.cm.coolwarm,
+    )
+    ax0.set_xlabel(r"x1")
+    ax0.set_ylabel(r"x2")
+    ax0.set_title(
+        f"Simulated Surface",
         fontweight="bold",
         fontsize=15,
     )
-    plt.show()
 
-
-def plot_contour(variation_ratio, n, f, f_hat=None, plt_name="Org"):
-
-    fig = plt.figure()
-    delta = 0.01
-    grid_len = len(np.arange(-1.75, 1.75, delta))
-
-    plt.title(
-        "Contour Plot (n:{n}, variation ratio:{variation_ratio})".format(
-            n=n, variation_ratio=variation_ratio
-        ),
+    ax1.contour(X, Y, Z_hat, cmap=plt.cm.coolwarm)
+    ax1.set_title(
+        "Contour Plot",
         fontweight="bold",
         fontsize=15,
     )
-    plt.xlabel("x")
-    plt.ylabel("y")
-    X, Y = np.meshgrid(np.arange(-1.75, 1.75, delta), np.arange(-1.75, 1.75, delta))
-    if plt_name == "svm":
-        Z = f_hat.predict(np.array([X.reshape(-1), Y.reshape(-1)]).T).reshape(
-            grid_len, grid_len
-        )
-    elif plt_name == "lgb":
-        Z = f_hat.predict(np.array([X.reshape(-1), Y.reshape(-1)]).T).reshape(
-            grid_len, grid_len
-        )
-    elif plt_name == "xgb":
-        Z = f_hat.predict(np.array([X.reshape(-1), Y.reshape(-1)]).T).reshape(
-            grid_len, grid_len
-        )
-    else:
-        Z = f(X, Y)
+    ax1.set_xlabel(r"x1")
+    ax1.set_ylabel(r"x2")
 
-    plt.xlim(-1.75, 1.75)
-    plt.ylim(-1.75, 1.75)
-    contour = plt.contour(X, Y, Z, cmap=plt.cm.coolwarm)
-    min_z_idx = Z[(Y >= 0.5) & (Y - 4 * X >= 1)].argmin()
-    plt.plot(
-        X[(Y >= 0.5) & (Y - 4 * X >= 1)][min_z_idx],
-        Y[(Y >= 0.5) & (Y - 4 * X >= 1)][min_z_idx],
-        c="r",
-        marker="o",
-        ms=4,
+    ax2.set_aspect("auto")
+    ax2.plot_surface(
+        X,
+        Y,
+        Z,
+        cmap=plt.cm.coolwarm,
     )
-    plt.text(
-        X[(Y >= 0.5) & (Y - 4 * X >= 1)][min_z_idx],
-        Y[(Y >= 0.5) & (Y - 4 * X >= 1)][min_z_idx],
-        str(round(Z[(Y >= 0.5) & (Y - 4 * X >= 1)].min(), 4))
-        + " ("
-        + str(round(X[(Y >= 0.5) & (Y - 4 * X >= 1)][min_z_idx], 4))
-        + ", "
-        + str(round(Y[(Y >= 0.5) & (Y - 4 * X >= 1)][min_z_idx], 4))
-        + ")",
+    ax2.set_xlabel(r"x1")
+    ax2.set_ylabel(r"x2")
+    ax2.set_title(
+        f"Real Surface",
+        fontweight="bold",
+        fontsize=15,
     )
-    plt.axline(xy1=(0, 1), slope=4, color="black", lw=1, linestyle='--')
-    plt.hlines(y=0.5, xmin=-1.75, xmax=1.75, color="black", lw=1, linestyle='--')
-    plt.clabel(contour, inline=1, fontsize=8)
+    if animate:
+
+        def update(frame):
+            ax0.view_init(elev=20.0, azim=frame)
+            ax2.view_init(elev=20.0, azim=frame)
+            return ax0, ax2
+
+        ani = FuncAnimation(fig, update, frames=range(0, 360), interval=50)
+
+    plt.tight_layout()
     plt.show()
