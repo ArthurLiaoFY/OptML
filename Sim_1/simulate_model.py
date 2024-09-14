@@ -5,13 +5,13 @@ from xgboost import XGBRegressor
 
 
 class SimulateModel:
-    def __init__(self, seed: int = 1122, model_type: str = "xgb") -> None:
-        match model_type:
-            case "svm":
+    def __init__(self, seed: int = 1122, model_type: str = "XGB") -> None:
+        match model_type.upper():
+            case "SVM":
                 self.model = SVR()
-            case "xgb":
+            case "XGB":
                 self.model = XGBRegressor(random_state=seed)
-            case "lgbm":
+            case "LGBM":
                 self.model = LGBMRegressor(random_state=seed)
 
         pass

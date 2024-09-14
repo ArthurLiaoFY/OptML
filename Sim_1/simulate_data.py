@@ -8,13 +8,13 @@ class SimulateData:
         seed: int = 1122,
         simulate_size: int = 3000,
         variation_ratio: float = 0.01,
-        sim_func: str = "f1",
+        sim_func: str = "F1",
     ) -> None:
         self.seed = seed
         self.simulate_size = simulate_size
         self.variation_ratio = variation_ratio
-        match sim_func:
-            case "f1":
+        match sim_func.upper():
+            case "F1":
                 self.func = self.__f1
                 self.x_min = [-1.75, -1.75]
                 self.x_max = [1.75, 1.75]
@@ -24,7 +24,7 @@ class SimulateData:
                 # ]
                 self.constraint_ueq = []
 
-            case "f2":
+            case "F2":
                 self.func = self.__f2
                 self.x_min = [-3.0, -3.0]
                 self.x_max = [3.0, 3.0]
@@ -34,7 +34,7 @@ class SimulateData:
                 # ]
                 self.constraint_ueq = []
 
-            case "f3":
+            case "F3":
                 self.func = self.__f3
                 self.x_min = [-2.0, -2.0]
                 self.x_max = [2.0, 2.0]
