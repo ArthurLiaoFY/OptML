@@ -6,16 +6,24 @@ from mpl_toolkits.mplot3d.art3d import Line3D
 
 def plot_obj_surface(
     pso_opt,
+    f_hat,
     max_iter: int,
     x_max: list,
     x_min: list,
-    f,
-    f_hat=None,
-    delta: float = 0.01,
+    x1_step: float,
+    x2_step: float,
     animate: bool = False,
 ):
-    x1_grid = np.arange(x_min[0], x_max[0], delta)
-    x2_grid = np.arange(x_min[1], x_max[1], delta)
+    x1_grid = np.linspace(
+        start=x_min[0],
+        stop=x_max[0],
+        num=x1_step,
+    )
+    x2_grid = np.linspace(
+        start=x_min[1],
+        stop=x_max[1],
+        num=x2_step,
+    )
     X, Y = np.meshgrid(
         x1_grid,
         x2_grid,

@@ -17,6 +17,8 @@ train_size_ratio = float(config["simulate"].get("train_size_ratio"))
 func = config["simulate"].get("func")
 model_type = config["simulate"].get("model_type")
 opt_type = config["simulate"].get("opt_type")
+x1_step = int(config["simulate"].get("x1_step"))
+x2_step = int(config["simulate"].get("x2_step"))
 max_iter = int(config["simulate"].get("max_iter"))
 size_pop = int(config["simulate"].get("size_pop"))
 
@@ -49,11 +51,12 @@ print(b)
 # %%
 plot_obj_surface(
     pso_opt=opt,
+    f_hat=sm.model,
     max_iter=max_iter,
     x_max=sd.x_max,
     x_min=sd.x_min,
-    f=sd.func,
-    f_hat=sm.model,
+    x1_step=x1_step,
+    x2_step=x2_step,
     animate=True,
 )
 
