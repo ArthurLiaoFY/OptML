@@ -13,6 +13,7 @@ def plot_obj_surface(
     x1_step: float,
     x2_step: float,
     animate: bool = False,
+    desc: str = "boston",
 ):
     x1_grid = np.linspace(
         start=x_min[0],
@@ -44,16 +45,16 @@ def plot_obj_surface(
         Z_hat,
         cmap=plt.cm.coolwarm,
     )
-    scatter_3d = Line3D(
-        [],
-        [],
-        [],
-        marker="o",
-        color="black",
-        markersize=5,
-        linestyle="None",
-    )
-    ax0.add_line(scatter_3d)
+    # scatter_3d = Line3D(
+    #     [],
+    #     [],
+    #     [],
+    #     marker="o",
+    #     color="black",
+    #     markersize=5,
+    #     linestyle="None",
+    # )
+    # ax0.add_line(scatter_3d)
 
     ax0.set_xlabel(r"x1")
     ax0.set_ylabel(r"x2")
@@ -73,6 +74,62 @@ def plot_obj_surface(
         markersize=5,
         linestyle="None",
     )
+    match desc:
+        case "F1":
+            pass
+            # ax1.axline(
+            #     xy1=(0, 1),
+            #     slope=4,
+            #     color="r",
+            #     linestyle="--",
+            #     lw=1,
+            # )
+            # ax1.hlines(
+            #     y=0.5,
+            #     xmin=x_min[1],
+            #     xmax=x_max[1],
+            #     color="r",
+            #     linestyles="--",
+            #     lw=1,
+            # )
+        case "F2":
+            pass
+            # t = np.linspace(0, 2 * np.pi, 40)
+            # ax1.plot(
+            #     2 * np.cos(t),
+            #     2 * np.sin(t),
+            #     color="r",
+            #     linestyle="--",
+            #     lw=1,
+            # )
+        case "F3":
+            pass
+            # t = np.linspace(0, 2 * np.pi, 40)
+            # ax1.plot(
+            #     0.5 * np.cos(t) + 1,
+            #     0.5 * np.sin(t),
+            #     color="r",
+            #     linestyle="--",
+            #     lw=1,
+            # )
+
+        case _:
+            # go boston
+            ax1.axline(
+                xy1=(
+                    (x_min[0], 2000 - x_min[0])
+                    if 2000 - x_min[0] <= x_min[1]
+                    else (2000 - x_min[1], x_min[1])
+                ),
+                xy2=(
+                    (x_max[0], 2000 - x_max[0])
+                    if 2000 - x_max[0] >= x_max[1]
+                    else (2000 - x_max[1], x_max[1])
+                ),
+                color="r",
+                linestyle="--",
+                lw=1,
+            )
     ax1.set_title(
         "Contour Plot",
         fontweight="bold",
@@ -83,16 +140,16 @@ def plot_obj_surface(
 
     if animate:
 
-        def update_surface(frame):
-            i, j = frame // 10, frame % 10
-            ax1.set_title("iter = " + str(i))
-            X_tmp = (
-                pso_opt.record_value["X"][i] + pso_opt.record_value["V"][i] * j / 10.0
-            )
-            scatter_3d.set_data(X_tmp[:, 0], X_tmp[:, 1])
-            scatter_3d.set_3d_properties(f_hat.predict(X_tmp))
+        # def update_surface(frame):
+        #     i, j = frame // 10, frame % 10
+        #     ax1.set_title("iter = " + str(i))
+        #     X_tmp = (
+        #         pso_opt.record_value["X"][i] + pso_opt.record_value["V"][i] * j / 10.0
+        #     )
+        #     scatter_3d.set_data(X_tmp[:, 0], X_tmp[:, 1])
+        #     scatter_3d.set_3d_properties(f_hat.predict(X_tmp))
 
-            return (scatter_3d,)
+        #     return (scatter_3d,)
 
         def update_contour(frame):
             i, j = frame // 10, frame % 10
@@ -105,7 +162,7 @@ def plot_obj_surface(
             return (scatter_2d,)
 
         def update(frame):
-            update_surface(frame=frame)
+            # update_surface(frame=frame)
             update_contour(frame=frame)
 
         ani = FuncAnimation(

@@ -29,8 +29,7 @@ class SimulateData:
                 self.x_min = [-3.0, -5.0]
                 self.x_max = [3.0, 5.0]
                 # self.constraint_ueq = [
-                #     lambda x: 0.5 - x[1],
-                #     lambda x: 1 - x[1] + 4 * x[0],
+                #     lambda x: x[0] ** 2 + x[1] ** 2 - 2**2,
                 # ]
                 self.constraint_ueq = []
 

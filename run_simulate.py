@@ -58,6 +58,7 @@ plot_obj_surface(
     x1_step=x1_step,
     x2_step=x2_step,
     animate=True,
+    desc=func,
 )
 
 # %%
