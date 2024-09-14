@@ -7,6 +7,7 @@ import pandas as pd
 from xgboost import XGBRegressor
 
 from common.optimize_response import optimize_f_hat
+from common.plot_fn import plot_obj_surface
 
 config = ConfigParser()
 config.read("config.ini")
@@ -34,34 +35,44 @@ test_df = test_df.loc[test_df["2ndFlrSF"] > 0, :]
 # %%
 test_df.shape
 # %%
+x_min = [
+    train_df["1stFlrSF"].quantile(lower_quantile),
+    train_df["2ndFlrSF"].quantile(lower_quantile),
+]
+
+x_max = [
+    train_df["1stFlrSF"].quantile(upper_quantile),
+    train_df["2ndFlrSF"].quantile(upper_quantile),
+]
+# %%
 plt.plot(train_df["1stFlrSF"], train_df["2ndFlrSF"], "o")
 plt.plot(test_df["1stFlrSF"], test_df["2ndFlrSF"], "o")
 plt.vlines(
     x=train_df["1stFlrSF"].quantile(lower_quantile),
-    ymin=train_df["2ndFlrSF"].quantile(lower_quantile),
-    ymax=train_df["2ndFlrSF"].quantile(upper_quantile),
+    ymin=x_min[1],
+    ymax=x_max[1],
     colors="red",
     linestyles="--",
 )
 plt.vlines(
     x=train_df["1stFlrSF"].quantile(upper_quantile),
-    ymin=train_df["2ndFlrSF"].quantile(lower_quantile),
-    ymax=train_df["2ndFlrSF"].quantile(upper_quantile),
+    ymin=x_min[1],
+    ymax=x_max[1],
     colors="red",
     linestyles="--",
 )
 
 plt.hlines(
     y=train_df["2ndFlrSF"].quantile(lower_quantile),
-    xmin=train_df["1stFlrSF"].quantile(lower_quantile),
-    xmax=train_df["1stFlrSF"].quantile(upper_quantile),
+    xmin=x_min[0],
+    xmax=x_max[0],
     colors="red",
     linestyles="--",
 )
 plt.hlines(
     y=train_df["2ndFlrSF"].quantile(upper_quantile),
-    xmin=train_df["1stFlrSF"].quantile(lower_quantile),
-    xmax=train_df["1stFlrSF"].quantile(upper_quantile),
+    xmin=x_min[0],
+    xmax=x_max[0],
     colors="red",
     linestyles="--",
 )
@@ -70,40 +81,6 @@ plt.show()
 # %%
 xgb = XGBRegressor(random_state=seed)
 xgb.fit(train_df[["1stFlrSF", "2ndFlrSF"]], train_df["SalePrice"])
-# %%
-# x1_grid, x2_grid = np.meshgrid(
-#     np.linspace(
-#         start=train_df["1stFlrSF"].quantile(lower_quantile),
-#         stop=train_df["1stFlrSF"].quantile(upper_quantile),
-#         num=x1_step,
-#     ),
-#     np.linspace(
-#         start=train_df["2ndFlrSF"].quantile(lower_quantile),
-#         stop=train_df["2ndFlrSF"].quantile(upper_quantile),
-#         num=x2_step,
-#     ),
-# )
-# estimated_surface = xgb.predict(
-#     np.array([x1_grid.reshape(-1), x2_grid.reshape(-1)]).T
-# ).reshape(len(x1_grid), len(x2_grid))
-# %%
-# plt.contour(
-#     x1_grid,
-#     x2_grid,
-#     estimated_surface,
-#     cmap=plt.cm.coolwarm,
-# )
-# plt.show()
-# %%
-# fig, ax = plt.subplots(1, 1, subplot_kw={"projection": "3d"})
-# surface = ax.plot_surface(
-#     x1_grid,
-#     x2_grid,
-#     estimated_surface,
-#     cmap=plt.cm.coolwarm,
-# )
-
-# plt.show()
 
 # %%
 opt, a, b = optimize_f_hat(
@@ -113,18 +90,22 @@ opt, a, b = optimize_f_hat(
     ],
     max_iter=max_iter,
     size_pop=size_pop,
-    x_min=[
-        train_df["1stFlrSF"].quantile(lower_quantile),
-        train_df["2ndFlrSF"].quantile(lower_quantile),
-    ],
-    x_max=[
-        train_df["1stFlrSF"].quantile(upper_quantile),
-        train_df["2ndFlrSF"].quantile(upper_quantile),
-    ],
+    x_min=x_min,
+    x_max=x_max,
     opt_type=opt_type,
 )
 # %%
-opt.best_x
+print(opt.best_x)
+print(opt.best_y)
 # %%
-opt.best_y
+plot_obj_surface(
+    pso_opt=opt,
+    f_hat=xgb,
+    max_iter=max_iter,
+    x_max=x_max,
+    x_min=x_min,
+    x1_step=x1_step,
+    x2_step=x2_step,
+    animate=True,
+)
 # %%

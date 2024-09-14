@@ -119,4 +119,4 @@ def plot_obj_surface(
     plt.tight_layout()
     plt.show()
 
-    ani.save("pso.gif", writer="pillow")
+    # ani.save("pso.gif", writer="pillow")
