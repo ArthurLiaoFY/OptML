@@ -28,8 +28,8 @@ opt_type = config["simulate"].get("opt_type")
 max_iter = int(config["boston_housing"].get("max_iter"))
 size_pop = int(config["boston_housing"].get("size_pop"))
 
-train_df = pd.read_csv("boston_housing/data/train.csv")
-test_df = pd.read_csv("boston_housing/data/test.csv")
+train_df = pd.read_csv("boston_housing/train.csv")
+test_df = pd.read_csv("boston_housing/test.csv")
 train_df = train_df.loc[train_df["2ndFlrSF"] > 0, :]
 test_df = test_df.loc[test_df["2ndFlrSF"] > 0, :]
 # %%
