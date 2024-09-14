@@ -4,7 +4,7 @@ from configparser import ConfigParser
 from common.estimate_surface import EstimateSurface
 from common.metrics_fn import R_square, rmse
 from common.optimize_response import optimize_f_hat
-from simulate.plot_fn import plot_obj_surface
+from common.plot_fn import plot_obj_surface
 from simulate.simulate_data import SimulateData
 
 config = ConfigParser()
