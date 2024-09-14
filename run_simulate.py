@@ -1,11 +1,11 @@
 # %%
 from configparser import ConfigParser
 
-from simulate.metrics_fn import R_square, rmse
-from simulate.optimize_response import optimize_f_hat
+from common.estimate_surface import EstimateSurface
+from common.metrics_fn import R_square, rmse
+from common.optimize_response import optimize_f_hat
 from simulate.plot_fn import plot_obj_surface
 from simulate.simulate_data import SimulateData
-from simulate.simulate_model import SimulateModel
 
 config = ConfigParser()
 config.read("config.ini")
@@ -28,7 +28,7 @@ sd = SimulateData(
 )
 X_train, X_val, y_train, y_val = sd.get_data(train_size_ratio=train_size_ratio)
 
-sm = SimulateModel(seed=seed, model_type=model_type)
+sm = EstimateSurface(seed=seed, model_type=model_type)
 sm.fit_model(X=X_train, y=y_train)
 y_hat = sm.pred_model(valid_X=X_val)
 

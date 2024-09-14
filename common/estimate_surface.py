@@ -4,8 +4,12 @@ from sklearn.svm import SVR
 from xgboost import XGBRegressor
 
 
-class SimulateModel:
-    def __init__(self, seed: int = 1122, model_type: str = "XGB") -> None:
+class EstimateSurface:
+    def __init__(
+        self,
+        seed: int = 1122,
+        model_type: str = "XGB",
+    ) -> None:
         match model_type.upper():
             case "SVM":
                 self.model = SVR()
@@ -14,12 +18,8 @@ class SimulateModel:
             case "LGBM":
                 self.model = LGBMRegressor(random_state=seed)
 
-        pass
-
-    def fit_model(self, X: np.ndarray, y: np.ndarray):
+    def fit_model(self, X: np.ndarray, y: np.ndarray) -> None:
         self.model.fit(X, y)
 
-        pass
-
-    def pred_model(self, valid_X: np.ndarray):
+    def pred_model(self, valid_X: np.ndarray) -> np.ndarray:
         return self.model.predict(valid_X)

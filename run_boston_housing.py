@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from xgboost import XGBRegressor
 
-from simulate.optimize_response import optimize_f_hat
+from common.optimize_response import optimize_f_hat
 
 config = ConfigParser()
 config.read("config.ini")
