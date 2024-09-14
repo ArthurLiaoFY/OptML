@@ -153,7 +153,11 @@ def plot_obj_surface(
 
         def update_contour(frame):
             i, j = frame // 10, frame % 10
-            ax1.set_title("iter = " + str(i))
+            ax1.set_title(
+                "iter = " + str(i),
+                fontweight="bold",
+                fontsize=15,
+            )
             X_tmp = (
                 pso_opt.record_value["X"][i] + pso_opt.record_value["V"][i] * j / 10.0
             )
