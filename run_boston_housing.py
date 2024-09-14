@@ -15,25 +15,15 @@ config.read("config.ini")
 seed = int(config["boston_housing"].get("seed"))
 lower_quantile = float(config["boston_housing"].get("lower_quantile"))
 upper_quantile = float(config["boston_housing"].get("upper_quantile"))
-# simulate_size = int(config["simulate"].get("simulate_size"))
-# variation_ratio = float(config["simulate"].get("variation_ratio"))
-# train_size_ratio = float(config["simulate"].get("train_size_ratio"))
-# func = config["simulate"].get("func")
-# model_type = config["simulate"].get("model_type")
 x1_step = int(config["boston_housing"].get("x1_step"))
 x2_step = int(config["boston_housing"].get("x2_step"))
-
-
 opt_type = config["simulate"].get("opt_type")
 max_iter = int(config["boston_housing"].get("max_iter"))
 size_pop = int(config["boston_housing"].get("size_pop"))
 
 train_df = pd.read_csv("boston_housing/train.csv")
-test_df = pd.read_csv("boston_housing/test.csv")
 train_df = train_df.loc[train_df["2ndFlrSF"] > 0, :]
-test_df = test_df.loc[test_df["2ndFlrSF"] > 0, :]
-# %%
-test_df.shape
+
 # %%
 x_min = [
     train_df["1stFlrSF"].quantile(lower_quantile),
@@ -46,7 +36,6 @@ x_max = [
 ]
 # %%
 plt.plot(train_df["1stFlrSF"], train_df["2ndFlrSF"], "o")
-plt.plot(test_df["1stFlrSF"], test_df["2ndFlrSF"], "o")
 plt.vlines(
     x=train_df["1stFlrSF"].quantile(lower_quantile),
     ymin=x_min[1],
